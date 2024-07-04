@@ -1,0 +1,12 @@
+---
+title: فهرست موضوعی کتاب
+permalink: /toc
+---
+
+<ul>
+    {% for chapter in site.data.chapters %}
+
+    <li><a href="{{site.baseurl}}/assets/generated/{{chapter.folder}}/main.pdf">{{chapter.title}}</a></li>
+
+    {% endfor %}
+</ul>
