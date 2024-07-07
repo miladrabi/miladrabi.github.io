@@ -29,11 +29,3 @@ for chapter in $(ls); do
         cd ..
     fi
 done
-
-# # Also render the updated PDF
-
-# # Fix permissions
-# cd ..
-# chmod 0777 _includes/*
-# echo "Files generated:"
-# ls _includes/paper
