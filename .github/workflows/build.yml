@@ -1,0 +1,38 @@
+name: generate-book
+
+on:
+  push:
+    branches: [ gh-pages ]
+  pull_request:
+    branches: [ gh-pages ]
+
+jobs:
+  Generate:
+    name: Build and Deploy Interface
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+      - uses: actions/checkout@v2
+
+      - name: Convert Latex Files
+      - run: |
+          docker build -t latex2pdf .
+          docker run -i -v $PWD:/code latex2pdf
+          git status
+
+      - name: Deploy to gh-pages
+        if: (github.event_name == 'push')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          printf "GitHub Actor: ${GITHUB_ACTOR}\n"
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git config pull.rebase false
+          git fetch || printf "fetch did not work\n"
+          git checkout -b gh-pages || git checkout gh-pages
+          git status
+          git add .
+          git commit -m "Build $(git rev-parse source | grep -o '^.\{10\}')"
+          git push origin gh-pages --force
+  
